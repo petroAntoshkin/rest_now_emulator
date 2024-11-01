@@ -34,8 +34,8 @@ class HomePage extends StatelessWidget {
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
-
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ), // This trailing comma makes
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,// auto-formatting nicer for build methods.
     );
   }
 }
