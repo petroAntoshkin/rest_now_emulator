@@ -21,11 +21,13 @@ class Connection extends StatelessWidget {
     Color statusColor = Colors.red;
     Color iconColor = Colors.grey;
     IconData statusIcon = Icons.bluetooth_disabled;
+    Widget connectionIndicator = const Placeholder();
     const double insets = 5.0;
     final model = Provider.of<ConnectionProvider>(context).getModel(id);
 
     void editDone() {
-      if (nameController.text != model.name || uuidController.text != model.UUID) {
+      if (nameController.text != model.name ||
+          uuidController.text != model.UUID) {
         model.name = nameController.text;
         model.UUID = uuidController.text;
         Provider.of<ConnectionProvider>(context, listen: false)
@@ -42,7 +44,7 @@ class Connection extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(model.name),
       ),
-      body: ListView(
+      body: Column(
         children: [
           BlocConsumer<ConnectionBloc, BleConnectionState>(
             listener: (context, state) {
@@ -73,6 +75,45 @@ class Connection extends StatelessWidget {
             },
           ),
           ConnectionCard(index: id),
+          BlocConsumer<ConnectionBloc, BleConnectionState>(
+              listener: (context, state) {
+                if (state is ActivatedState) {
+                  connectionIndicator = InkWell(
+                    onTap: (){
+                      debugPrint('tap on activated');
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(baseSize),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(baseSize)),
+                      ),
+                      child: const Text(
+                        'OFF',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
+                  );
+                } else if (state is PausedState) {
+                  connectionIndicator = InkWell(
+                    onTap: (){
+                      debugPrint('tap on paused');
+                    },
+                    child: Container(
+                      padding: EdgeInsets.all(baseSize),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(baseSize)),
+                      ),
+                      child: const Text(
+                          'ON',
+                          style: TextStyle(color: Colors.green),
+                      ),
+                    ),
+                  );
+                }
+              },
+              builder: (context, state) {
+                return connectionIndicator;
+              })
         ],
       ),
       bottomNavigationBar: BottomNavigationBar(

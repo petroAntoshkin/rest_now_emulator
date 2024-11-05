@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/widgets.dart';
 import 'package:rest_now_emulator/models/connection_model.dart';
 
@@ -13,11 +11,11 @@ class ConnectionProvider extends ChangeNotifier {
     _initConnections();
   }
 
-  void _initConnections(){
+  void _initConnections() {
     _lastId = 0;
     _connections.putIfAbsent(
       _lastId++,
-          () => ConnectionModel(name: 'Initial', UUID: const Uuid().v1()),
+      () => ConnectionModel(name: 'Initial', UUID: const Uuid().v1()),
     );
   }
 
@@ -34,7 +32,7 @@ class ConnectionProvider extends ChangeNotifier {
   bool deleteConnection(int id) {
     if (_connections.containsKey(id)) {
       _connections.remove(id);
-      if(_connections.isEmpty) {
+      if (_connections.isEmpty) {
         _initConnections();
       }
       notifyListeners();
@@ -42,10 +40,14 @@ class ConnectionProvider extends ChangeNotifier {
     }
     return false;
   }
-  ConnectionModel getModel(int index) => _connections[index]!;
 
-  void updateModel(int id, ConnectionModel model){
-    if(_connections.containsKey(id)){
+  ConnectionModel getModel(int index) => ConnectionModel(
+        name: _connections[index]!.name,
+        UUID: _connections[index]!.UUID,
+      );
+
+  void updateModel(int id, ConnectionModel model) {
+    if (_connections.containsKey(id)) {
       _connections[id]!.name = model.name;
       _connections[id]!.UUID = model.UUID;
       notifyListeners();
@@ -53,5 +55,4 @@ class ConnectionProvider extends ChangeNotifier {
   }
 
   Iterable<int> get modelIds => _connections.keys;
-
 }
