@@ -1,5 +1,4 @@
-import 'dart:convert';
-import 'dart:io';
+
 
 import 'package:flutter/widgets.dart';
 import 'package:rest_now_emulator/models/connection_model.dart';
@@ -35,21 +34,24 @@ class ConnectionProvider extends ChangeNotifier {
   bool deleteConnection(int id) {
     if (_connections.containsKey(id)) {
       _connections.remove(id);
+      if(_connections.isEmpty) {
+        _initConnections();
+      }
       notifyListeners();
       return true;
     }
     return false;
   }
+  ConnectionModel getModel(int index) => _connections[index]!;
 
-  void deleteConnectionByUUID(String uuid) {
-    _connections.forEach((key, value) {
-      if (value.UUID == uuid) {
-        _connections.remove(key);
-        notifyListeners();
-      }
-    });
-    if (_connections.isEmpty) {
-      _initConnections();
+  void updateModel(int id, ConnectionModel model){
+    if(_connections.containsKey(id)){
+      _connections[id]!.name = model.name;
+      _connections[id]!.UUID = model.UUID;
+      notifyListeners();
     }
   }
+
+  Iterable<int> get modelIds => _connections.keys;
+
 }

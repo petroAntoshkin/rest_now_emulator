@@ -1,24 +1,24 @@
-import 'package:flutter/cupertino.dart';
+
+import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rest_now_emulator/elements/connection_card.dart';
-import 'package:rest_now_emulator/models/connection_model.dart';
 import 'package:rest_now_emulator/providers/connection_provider.dart';
+import 'package:rest_now_emulator/screens/connection.dart';
 
 class ListOfConnections extends StatelessWidget {
   const ListOfConnections({super.key});
 
   @override
   Widget build(BuildContext context) {
-    Map<int, ConnectionModel> connections =
-        Provider.of<ConnectionProvider>(context).connections;
-    // List<Widget> listChildren = [];
-    // connections.forEach((key, value) {
-    //   listChildren.add(ConnectionCard(model: value));
-    // });
+    var listOfId = Provider.of<ConnectionProvider>(context).modelIds;
     return ListView.builder(
-      itemCount: connections.length,
-      itemBuilder: (context, int index) => ConnectionCard(
-        model: connections[index]!,
+      itemCount: listOfId.length,
+      itemBuilder: (context, int index) => GestureDetector(
+        onTap: () {
+          Navigator.of(context).push(
+              MaterialPageRoute(builder: (context) => Connection(id: index)));
+        },
+        child: ConnectionCard(index: index),
       ),
     );
   }
